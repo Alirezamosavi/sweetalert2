@@ -1,3 +1,52 @@
+Add in app.js
+
+ import swal from 'sweetalert2';
+ window.Swal = swal;
+
+const toast = swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000
+});
+window.Toast = toast;
+
+Add in example.vue
+deleteBook(id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.value) {
+          this.axios
+            .post(`http://localhost:8000/api/store_image/delete/${id}`)
+            .then((response) => {
+              let i = this.books.map((item) => item.id).indexOf(id); // find index of your object
+              this.books.splice(i, 1);
+              Swal.fire(
+                              'Deleted!',
+                              'Photo deleted successfully',
+                              'success'
+                            )
+                    this.getPosts();
+            });
+        }
+      }).catch(() => {
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Something went wrong!',
+                          footer: '<a href>Why do I have this issue?</a>'
+                        })
+                    });
+    }
+
+
 <p align="center">
   <a href="https://github.com/sponsors/limonte">[= Become the :trophy: Ultimate Sponsor of SweetAlert2 and place your banner here (100K+ unique visitors per month) =]</a>
 </p>
